@@ -1,0 +1,32 @@
+version: '3.5'
+services:
+    app:
+        build:
+            context: ./
+            dockerfile: app.dockerfile
+        working_dir: /var/www
+        container_name: category-api-php
+        volumes:
+          - ./:/var/www
+        environment:
+          - "DB_PORT=3306"
+          - "DB_HOST=database"
+        networks:
+          - db-net
+    web:
+        build:
+            context: ./
+            dockerfile: web.dockerfile
+        working_dir: /var/www
+        container_name: category-api-web
+        volumes:
+          - app
+        ports:
+          - 8888:8888
+        networks:
+          - db-net
+
+networks:
+  db-net:
+    external:
+      name: db_network
